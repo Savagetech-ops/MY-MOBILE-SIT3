@@ -1,0 +1,100 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Your Cart - P.A.I.D</title>
+<style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f9f9f9; }
+    h1 { color: #003366; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { padding: 10px; border: 1px solid #ccc; text-align: left; }
+    .btn { padding: 10px 20px; background: #003366; color: white; border: none; cursor: pointer; margin-top: 20px; }
+    .btn:hover { background: #0055aa; }
+  
+            body {
+              margin: 0;
+              padding: 0;
+              max-width: 100vw;
+              overflow-x: hidden;
+            }
+            .product-grid {
+              grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        
+        .dashboard {
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+        </style>
+</head>
+<body>
+<h1>Your Cart</h1>
+<table id="cartTable">
+<thead>
+<tr><th>Product</th><th>Price</th><th>Qty</th><th>Total</th><th>Remove</th></tr>
+</thead>
+<tbody></tbody>
+</table>
+<h2 id="grandTotal">Total: ₦0</h2>
+<button class="btn" onclick="checkoutWhatsApp()">Checkout via WhatsApp</button>
+<script>
+    let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    const tbody = document.querySelector("#cartTable tbody");
+    const grandTotal = document.getElementById("grandTotal");
+
+    function renderCart() {
+      tbody.innerHTML = "";
+      let total = 0;
+      cart.forEach((item, index) => {
+        const row = document.createElement("tr");
+        const itemTotal = item.price * item.qty;
+        total += itemTotal;
+        row.innerHTML = \`
+          <td>\${item.name}</td>
+          <td>₦\${item.price}</td>
+          <td>\${item.qty}</td>
+          <td>₦\${itemTotal}</td>
+          <td><button onclick="removeItem(\${index})">❌</button></td>
+        \`;
+        tbody.appendChild(row);
+      });
+      grandTotal.innerText = "Total: ₦" + total;
+    }
+
+    function removeItem(index) {
+      cart.splice(index, 1);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      renderCart();
+    }
+
+    function checkoutWhatsApp() {
+      if (cart.length === 0) return alert("Your cart is empty!");
+      let message = "I want to order:\n";
+      let total = 0;
+      cart.forEach(item => {
+        const itemTotal = item.price * item.qty;
+        message += \`\${item.qty} x \${item.name} (₦\${itemTotal})\n\`;
+        total += itemTotal;
+      });
+      message += "\nTotal: ₦" + total;
+      const waUrl = "https://wa.me/2349021335159?text=" + encodeURIComponent(message);
+      window.open(waUrl, "_blank");
+    }
+
+    renderCart();
+  
+        window.addEventListener('load', function () {
+            setTimeout(() => {
+                const dashboard = document.querySelector('.dashboard');
+                if (dashboard) {
+                    dashboard.style.display = 'block';
+                }
+            }, 2500); // match entry animation timing
+        });
+        </script>
+</body>
+</html>

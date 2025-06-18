@@ -1,0 +1,495 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>P.A.I.D. - Page 1</title>
+<style>
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    body { font-family: Arial, sans-serif; background: #f0f8ff; margin: 0; padding: 20px; }
+    header { background-color: #003366; color: #ffd700; padding: 20px; text-align: center; animation: fadeInUp 1s ease-in; }
+    .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px; }
+    .product { background: white; border: 1px solid #ccc; border-radius: 10px; padding: 15px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; animation: fadeInUp 0.8s ease-in; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .product:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+    .product img { width: 100%; max-height: 200px; object-fit: cover; border-radius: 5px; transition: transform 0.3s ease; }
+    .product:hover img { transform: scale(1.05); }
+    .product h3 { color: #003366; margin: 10px 0 5px; }
+    .product .desc { font-size: 0.9em; color: #555; }
+    .product .price { font-weight: bold; color: #003366; margin: 10px 0; }
+    .product .delivery { font-size: 0.8em; color: #999; margin-bottom: 10px; }
+    .buy-btn { padding: 10px; background-color: #003366; color: #ffd700; border: none; border-radius: 5px; cursor: pointer; transition: background 0.3s ease; }
+    .buy-btn:hover { background-color: #002244; }
+    .pagination { text-align: center; margin-top: 20px; }
+    .pagination a { margin: 0 5px; text-decoration: none; color: #003366; font-weight: bold; transition: color 0.3s ease; }
+    .pagination a:hover { color: #ffd700; }
+    @media screen and (max-width: 600px) { .product-grid { grid-template-columns: 1fr; } }
+  
+        body {
+            background-color: #000;
+            color: gold;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .product, .card, .button, .product-box {
+            background-color: #111 !important;
+            border: 1px solid gold;
+            color: gold;
+        }
+        .button, .order-button {
+            background-color: gold !important;
+            color: black !important;
+        }
+        .sticky-header, #cartIcon, #whatsappIcon {
+            background-color: #111 !important;
+            border: 1px solid gold;
+        }
+        
+            body {
+              margin: 0;
+              padding: 0;
+              max-width: 100vw;
+              overflow-x: hidden;
+            }
+            .product-grid {
+              grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        
+        .dashboard {
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+        </style>
+<style>
+@keyframes fadeZoomIn {
+  0% { opacity: 0; transform: scale(0.7); }
+  100% { opacity: 1; transform: scale(1); }
+}
+#animatedTitle {
+  animation: fadeZoomIn 1.5s ease-out forwards;
+  opacity: 0;
+}
+</style>
+<style>
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+</style>
+<style>
+#cartIcon {
+  position: fixed;
+  top: 20px;
+  right: 90px;
+  z-index: 10000;
+  cursor: pointer;
+}
+#cartIcon.animate {
+  animation: cartBounce 0.6s ease;
+}
+@keyframes cartBounce {
+  0% { transform: scale(1); }
+  25% { transform: scale(1.2); }
+  50% { transform: scale(0.9); }
+  75% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+#cartCount {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: red;
+  color: white;
+  font-size: 12px;
+  padding: 3px 6px;
+  border-radius: 50%;
+  font-weight: bold;
+}
+</style>
+<style>
+#logo, .logo {
+  transition: all 0.4s ease-in-out;
+}
+#logo:hover, .logo:hover {
+  text-shadow: 0 0 10px gold, 0 0 20px gold, 0 0 30px gold;
+  transform: scale(1.05);
+}
+</style>
+<style>
+.star-input {
+  display: inline-block;
+  direction: rtl;
+  unicode-bidi: bidi-override;
+}
+.star-input > span {
+  display: inline-block;
+  font-size: 20px;
+  color: #ccc;
+  cursor: pointer;
+}
+.star-input > span:hover,
+.star-input > span:hover ~ span,
+.star-input.rated > span.selected,
+.star-input.rated > span.selected ~ span {
+  color: gold;
+}
+</style>
+<script>
+function rateProduct(productId, rating) {
+  localStorage.setItem("rating-" + productId, rating);
+  const stars = document.querySelectorAll(`#rating-${productId} span`);
+  stars.forEach((star, idx) => {
+    if ((5 - idx) <= rating) {
+      star.classList.add("selected");
+    } else {
+      star.classList.remove("selected");
+    }
+  });
+  document.querySelector(`#rating-${productId}`).classList.add("rated");
+}
+
+function loadRatings() {
+  const ratingSections = document.querySelectorAll(".star-input");
+  ratingSections.forEach(section => {
+    const productId = section.getAttribute("data-id");
+    const saved = localStorage.getItem("rating-" + productId);
+    if (saved) rateProduct(productId, parseInt(saved));
+  });
+}
+
+document.addEventListener("DOMContentLoaded", loadRatings);
+
+        window.addEventListener('load', function () {
+            setTimeout(() => {
+                const dashboard = document.querySelector('.dashboard');
+                if (dashboard) {
+                    dashboard.style.display = 'block';
+                }
+            }, 2500); // match entry animation timing
+        });
+        </script>
+</head>
+<body>
+<div id="loader" style="position: fixed; width: 100%; height: 100%; background: white; display: flex; align-items: center; justify-content: center; z-index: 1000;">
+<div style="text-align: center;">
+<div style="font-size: 20px; color: #1E90FF; font-weight: bold;">P.A.I.D — Powering Ambition, Inspiring Deals.</div>
+<div style="font-size: 14px; color: #555;">Where value meets vision.</div>
+</div>
+</div>
+<h1 id="animatedTitle" style="text-align:center; font-size:36px; color:#1E90FF; margin-top:40px;">P.A.I.D Online Store</h1>
+<style>
+@keyframes bounceIn {
+  0% { transform: scale(0.9); opacity: 0; }
+  60% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); }
+}
+.product-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: bounceIn 0.6s ease;
+}
+.product-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+.delivery-anim {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  width: 60px;
+  animation: floatTruck 4s infinite alternate;
+  z-index: 999;
+}
+@keyframes floatTruck {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(20px); }
+}
+</style>
+<img alt="Delivery" class="delivery-anim" src="https://cdn-icons-png.flaticon.com/512/1533/1533931.png"/>
+<div id="cartIcon" onclick="openSlideCart()" style="position: fixed; top: 20px; right: 90px; z-index: 10000; cursor: pointer;">
+  🛒 <span id="cartCount">0</span>
+</div>
+<script>
+function updateCartCount() {
+  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+  document.getElementById("cartCount").textContent = cart.reduce((sum, item) => sum + item.qty, 0);
+}
+updateCartCount();
+</script>
+<header style=" position: sticky; top: 0; background: white; z-index: 9999; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+<h1>P.A.I.D. Online Store - Page 1</h1>
+<p>Click any product to see account details: <strong>6141014882 (Opay)</strong></p>
+</header>
+<div class="product-grid">
+<div class="product" onclick="viewDetails('Smart Watch', 'Fitness smart watch with Bluetooth.', '₦15,000', '1-2 days', 'https://i.imgur.com/rfT76In.jpg')" style="border-image: linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet) 1;">
+<img alt="Smart Watch" src="https://i.imgur.com/rfT76In.jpg"/>
+<h3>Smart Watch</h3>
+<p class="desc">Fitness smart watch with Bluetooth.</p>
+<p class="price">₦15,000</p>
+<p class="delivery">Delivery: 1-2 days</p>
+<button class="buy-btn">Order Now</button><button onclick="event.stopPropagation(); addToCart('$1', '$2')">Add to Cart</button>
+<div class="star-rating" style="color: gold; font-size: 16px; margin-top: 5px;">
+  ★★★★☆ 4.0
+</div>
+<div class="star-input" data-id="index-product-0" id="rating-index-product-0">
+<span onclick="rateProduct('index-product-0', 5)">★</span>
+<span onclick="rateProduct('index-product-0', 4)">★</span>
+<span onclick="rateProduct('index-product-0', 3)">★</span>
+<span onclick="rateProduct('index-product-0', 2)">★</span>
+<span onclick="rateProduct('index-product-0', 1)">★</span>
+</div>
+</div>
+<div class="product" onclick="viewDetails('Gaming Headset', 'Noise-cancelling over-ear gaming headset.', '₦18,500', '2-4 days', 'https://i.imgur.com/4qOYJHw.jpg')" style="border-image: linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet) 1;">
+<img alt="Gaming Headset" src="https://i.imgur.com/4qOYJHw.jpg"/>
+<h3>Gaming Headset</h3>
+<p class="desc">Noise-cancelling over-ear gaming headset.</p>
+<p class="price">₦18,500</p>
+<p class="delivery">Delivery: 2-4 days</p>
+<button class="buy-btn">Order Now</button><button onclick="event.stopPropagation(); addToCart('$1', '$2')">Add to Cart</button>
+<div class="star-rating" style="color: gold; font-size: 16px; margin-top: 5px;">
+  ★★★★☆ 4.0
+</div>
+<div class="star-input" data-id="index-product-1" id="rating-index-product-1">
+<span onclick="rateProduct('index-product-1', 5)">★</span>
+<span onclick="rateProduct('index-product-1', 4)">★</span>
+<span onclick="rateProduct('index-product-1', 3)">★</span>
+<span onclick="rateProduct('index-product-1', 2)">★</span>
+<span onclick="rateProduct('index-product-1', 1)">★</span>
+</div>
+</div>
+<div class="product" onclick="viewDetails('Bluetooth Speaker', 'Portable wireless speaker with bass boost.', '₦12,000', '1-3 days', 'https://i.imgur.com/K5GbRSw.jpg')">
+<img alt="Bluetooth Speaker" src="https://i.imgur.com/K5GbRSw.jpg"/>
+<h3>Bluetooth Speaker</h3>
+<p class="desc">Portable wireless speaker with bass boost.</p>
+<p class="price">₦12,000</p>
+<p class="delivery">Delivery: 1-3 days</p>
+<button class="buy-btn">Order Now</button><button onclick="event.stopPropagation(); addToCart('$1', '$2')">Add to Cart</button>
+<div class="star-rating" style="color: gold; font-size: 16px; margin-top: 5px;">
+  ★★★★☆ 4.0
+</div>
+<div class="star-input" data-id="index-product-2" id="rating-index-product-2">
+<span onclick="rateProduct('index-product-2', 5)">★</span>
+<span onclick="rateProduct('index-product-2', 4)">★</span>
+<span onclick="rateProduct('index-product-2', 3)">★</span>
+<span onclick="rateProduct('index-product-2', 2)">★</span>
+<span onclick="rateProduct('index-product-2', 1)">★</span>
+</div>
+</div>
+</div>
+<div class="pagination">
+<a href="index.html"><strong>1</strong></a>
+<a href="page2.html">2</a>
+</div>
+<script>
+    function viewDetails(name, desc, price, delivery, img) {
+      const msg = `Product: ${name}\nDescription: ${desc}\nPrice: ${price}\nDelivery: ${delivery}\n\nTo order, click OK to chat with us on WhatsApp.`;
+      if (confirm(msg)) {
+      showDeliveryAnimation();
+        window.open(`https://wa.me/2349021335159?text=I%20want%20to%20order%20${encodeURIComponent(name)}%20for%20${encodeURIComponent(price)}`, '_blank');
+      }
+    }
+  </script>
+<svg height="80" id="deliveryMan" style="position:fixed; bottom:10px; right:10px; z-index:1000; display:none;" viewbox="0 0 64 64" width="80">
+<circle cx="32" cy="32" fill="#003366" r="30"></circle>
+<path d="M20 44 Q32 20 44 44" fill="#ffd700"></path>
+<circle cx="32" cy="28" fill="#fff" r="4"></circle>
+</svg>
+<script>
+  function showDeliveryAnimation() {
+    const el = document.getElementById('deliveryMan');
+    el.style.display = 'block';
+    el.animate([
+      { transform: 'translateX(100vw)' },
+      { transform: 'translateX(-100%)' }
+    ], {
+      duration: 3000,
+      iterations: 1
+    });
+    setTimeout(() => { el.style.display = 'none'; }, 3000);
+  }
+</script>
+<style>
+#slideCart {
+  position: fixed;
+  top: 0;
+  right: -300px;
+  width: 300px;
+  height: 100%;
+  background: white;
+  box-shadow: -2px 0 8px rgba(0,0,0,0.2);
+  padding: 20px;
+  transition: right 0.3s ease;
+  z-index: 1001;
+}
+#slideCart h3 { color: #003366; margin-top: 0; }
+#slideCart ul { list-style: none; padding: 0; }
+#slideCart li { margin-bottom: 10px; }
+#slideCart .btn { background: #003366; color: white; padding: 10px; border: none; width: 100%; margin-top: 10px; cursor: pointer; }
+#cartOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  z-index: 1000;
+}
+</style>
+<style>
+#slideCart {
+  position: fixed;
+  top: 0;
+  right: -320px;
+  width: 320px;
+  height: 100%;
+  background: white;
+  box-shadow: -2px 0 8px rgba(0,0,0,0.2);
+  padding: 20px;
+  transition: right 0.3s ease;
+  z-index: 1001;
+}
+#slideCart h3 { color: #003366; margin-top: 0; }
+#slideCart ul { list-style: none; padding: 0; }
+#slideCart li { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.qty-controls { display: flex; gap: 5px; align-items: center; }
+.qty-controls button { padding: 3px 7px; font-size: 14px; background: #003366; color: white; border: none; cursor: pointer; }
+#slideCart .btn { background: #003366; color: white; padding: 10px; border: none; width: 100%; margin-top: 10px; cursor: pointer; }
+#cartOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  z-index: 1000;
+}
+</style>
+<div id="cartOverlay" onclick="closeSlideCart()"></div>
+<div id="slideCart">
+<h3>Your Cart</h3>
+<ul id="cartItems"></ul>
+<p id="slideTotal"><strong>Total:</strong> ₦0</p>
+<button class="btn" onclick="checkoutSlideCart()">Checkout</button>
+</div>
+<script>
+function openSlideCart() {
+  document.getElementById('slideCart').style.right = '0';
+  document.getElementById('cartOverlay').style.display = 'block';
+  renderSlideCart();
+}
+function closeSlideCart() {
+  document.getElementById('slideCart').style.right = '-320px';
+  document.getElementById('cartOverlay').style.display = 'none';
+}
+function renderSlideCart() {
+  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+  let list = document.getElementById("cartItems");
+  let total = 0;
+  list.innerHTML = "";
+  cart.forEach((item, i) => {
+    let li = document.createElement("li");
+    const itemTotal = item.qty * item.price;
+    total += itemTotal;
+    li.innerHTML = \`
+      <span>\${item.qty} x \${item.name}</span>
+      <div class="qty-controls">
+        <button onclick="updateQty(\${i}, -1)">−</button>
+        <span>\${item.qty}</span>
+        <button onclick="updateQty(\${i}, 1)">+</button>
+      </div>
+    \`;
+    list.appendChild(li);
+  });
+  document.getElementById("slideTotal").textContent = "Total: ₦" + total;
+}
+function updateQty(index, change) {
+  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+  cart[index].qty += change;
+  if (cart[index].qty <= 0) cart.splice(index, 1);
+  localStorage.setItem("cart", JSON.stringify(cart));
+  renderSlideCart();
+  updateCartCount();
+}
+function checkoutSlideCart() {
+  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+  if (cart.length === 0) return alert("Cart is empty!");
+  let message = "I want to order:\n";
+  let total = 0;
+  cart.forEach(item => {
+    const itemTotal = item.price * item.qty;
+    message += \`\${item.qty} x \${item.name} (₦\${itemTotal})\n\`;
+    total += itemTotal;
+  });
+  message += "\nTotal: ₦" + total;
+  window.open("https://wa.me/2349021335159?text=" + encodeURIComponent(message), "_blank");
+  closeSlideCart();
+}
+function updateCartCount() {
+  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+  document.getElementById("cartCount").textContent = cart.reduce((sum, item) => sum + item.qty, 0);
+}
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const addToCartButtons = document.querySelectorAll(".add-to-cart");
+  addToCartButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      setTimeout(() => openSlideCart(), 300);
+    });
+  });
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  setTimeout(() => {
+    document.getElementById("loader").style.display = "none";
+  }, 2000); // 2-second hold
+});
+</script>
+<a href="https://wa.me/2349021335159" id="whatsappIcon" style="position: fixed; bottom: 20px; right: 20px; background-color: #25D366;border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center;justify-content: center; z-index: 10000; box-shadow: 0 4px 8px rgba(0,0,0,0.3);animation: blink 1s infinite;" target="_blank">
+<img alt="WhatsApp" src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" style="width: 30px; height: 30px;"/>
+</a>
+<button id="undoButton" onclick="undoLastItem()" style="position: fixed; top: 90px; right: 90px; z-index: 10000; background: #ff4444;
+  color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+  Undo Last Item
+</button>
+<script>
+let cartCount = 0;
+function addToCart(productId) {
+  cartCount++;
+  updateCartUI();
+}
+
+function undoLastItem() {
+  if (cartCount > 0) {
+    cartCount--;
+    updateCartUI();
+  }
+}
+
+function updateCartUI() {
+  const cartCountElem = document.getElementById("cartCount");
+  const cartIconElem = document.getElementById("cartIcon");
+  if (cartCountElem) {
+    cartCountElem.innerText = cartCount;
+  }
+  if (cartIconElem) {
+    cartIconElem.classList.add("animate");
+    setTimeout(() => cartIconElem.classList.remove("animate"), 600);
+  }
+}
+</script>
+<div id="shareTools" style="position: fixed; bottom: 100px; left: 20px; z-index: 10000; display: flex; flex-direction: column; gap: 10px;">
+<button onclick="shareOn('whatsapp')" style="background:#25D366; border:none; padding:10px; border-radius:50%; box-shadow:0 2px 5px rgba(0,0,0,0.2); color:white; font-size:18px;">🟢</button>
+<button onclick="shareOn('facebook')" style="background:#3b5998; border:none; padding:10px; border-radius:50%; box-shadow:0 2px 5px rgba(0,0,0,0.2); color:white; font-size:18px;">📘</button>
+<button onclick="shareOn('twitter')" style="background:#1DA1F2; border:none; padding:10px; border-radius:50%; box-shadow:0 2px 5px rgba(0,0,0,0.2); color:white; font-size:18px;">🐦</button>
+<button onclick="copySiteLink()" style="background:#888; border:none; padding:10px; border-radius:50%; box-shadow:0 2px 5px rgba(0,0,0,0.2); color:white; font-size:18px;">🔗</button>
+</div>
+</body></html>
